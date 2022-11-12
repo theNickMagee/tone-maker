@@ -39,7 +39,7 @@ const FrequencyTable = ({ data }) => {
       amplitudes.push(y);
     }
     setState({ ...state, frequencies: frequencies, amplitudes: amplitudes });
-    setColumnStyle({ gridTemplateColumns: "repeat(" + parseInt(frequencies.length) + ", 1fr)" });
+    setColumnStyle({ gridTemplateColumns: "repeat(" + parseInt(frequencies.length + 1) + ", 1fr)" });
   }, []);
 
   useEffect(() => {
@@ -47,15 +47,32 @@ const FrequencyTable = ({ data }) => {
   }, [state]);
 
   return (
-    <div className="table-wrapper" style={columnStyle}>
-      {state &&
-        state.frequencies &&
-        state.frequencies.length > 0 &&
-        state.amplitudes.map((a, ai) => {
-          return state.frequencies.map((f, fi) => {
-            return <div>{f}</div>;
-          });
-        })}
+    <div className="table-container">
+      <div className="table-wrapper" style={columnStyle}>
+        {state && state.frequencies && state.frequencies.length > 0 && (
+          <>
+            {state.amplitudes.map((a, ai) => {
+              return state.frequencies.map((f, fi) => {
+                if (fi !== 0) {
+                  return <div className="table-item"></div>;
+                } else {
+                  return (
+                    <>
+                      <div>{a} </div>
+                      <div className="table-item"></div>
+                    </>
+                  );
+                }
+              });
+            })}
+            {/* left corner div */}
+            <div></div>
+            {state.frequencies.map((f, fi) => {
+              return <div>{f}</div>;
+            })}
+          </>
+        )}
+      </div>
     </div>
   );
 };

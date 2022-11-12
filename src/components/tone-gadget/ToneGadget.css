@@ -1,5 +1,5 @@
 .tone-gadget{
-    height: 10rem;
+    /* height: 10rem; */
     max-width: 100%;
     background-color: var(--secondary);
     border: 1px solid var(--border);
@@ -9,4 +9,18 @@
 
 .table-wrapper{
     display: grid;
+}
+
+.table-container{
+
+}
+
+.freq-labels{
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+}
+
+.table-item{
+    border: 1px solid var(--border);
 }
