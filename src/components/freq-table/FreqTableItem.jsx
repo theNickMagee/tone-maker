@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
+import * as Tone from "tone";
+import { Frequency } from "react-frequency";
 
 const FreqTableItem = ({ amp, freq, toggle, itemsOn }) => {
   const [on, setOn] = useState();
@@ -20,6 +22,7 @@ const FreqTableItem = ({ amp, freq, toggle, itemsOn }) => {
       setOn(false);
     }
   }, [itemsOn]);
+
   return (
     <div
       className="table-item hover-click"
@@ -28,7 +31,9 @@ const FreqTableItem = ({ amp, freq, toggle, itemsOn }) => {
       }}
       onClick={handleClick}
       key={amp + freq}
-    ></div>
+    >
+      {on && <Frequency hz={freq} type="center" gain={0.1} oscillator="sine" />}
+    </div>
   );
 };
 

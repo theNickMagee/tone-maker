@@ -11,8 +11,8 @@ const ToneGadget = ({ gadget }) => {
     ampMax: -20,
     ampStep: 5,
     freqMin: 0,
-    freqMax: 20000,
-    freqStep: 1000,
+    freqMax: 1000,
+    freqStep: 100,
   };
 
   return (
@@ -58,6 +58,10 @@ const FrequencyTable = ({ data }) => {
       setState({
         ...state,
         itemsOn: state.itemsOn.filter((item, i) => {
+          if (item.freq != f) {
+            return true;
+          } else {
+          }
           return item.freq != f;
         }),
       });
@@ -86,9 +90,15 @@ const FrequencyTable = ({ data }) => {
     setState({ ...state, itemsOn: [...state.itemsOn, { freq: f, amp: a }] });
   };
 
-  useEffect(() => {
-    console.log(state);
-  }, [state]);
+  //   useEffect(() => {
+  //     if (state && state.itemsOn){
+  //         for (let i = 0; i < state.itemsOn.length; i++){
+
+  //         }
+  //     }
+  //   }, [state]);
+
+  useEffect(() => {});
 
   return (
     <div className="table-container">
