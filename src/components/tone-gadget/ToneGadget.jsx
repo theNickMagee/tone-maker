@@ -1,5 +1,6 @@
 import React from "react";
 import { useEffect, useState } from "react";
+import FreqTableItem from "../freq-table/FreqTableItem";
 import "./ToneGadget.css";
 
 const ToneGadget = ({ gadget }) => {
@@ -26,8 +27,13 @@ export default ToneGadget;
 
 const FrequencyTable = ({ data }) => {
   const { ampMin, ampMax, ampStep, freqMin, freqMax, freqStep } = data;
-  const [state, setState] = useState({});
+  const [state, setState] = useState({
+    itemsOn: [],
+    frequencies: [],
+    amplitudes: [],
+  });
   const [columnStyle, setColumnStyle] = useState();
+  //   const [itemsOn, setItemsOn] = useState({}); //array of items shaped as such: [{freq: f, amp: a}, ...]
 
   useEffect(() => {
     let frequencies = [];
@@ -42,8 +48,46 @@ const FrequencyTable = ({ data }) => {
     setColumnStyle({ gridTemplateColumns: "repeat(" + parseInt(frequencies.length + 1) + ", 1fr)" });
   }, []);
 
+  const toggleItemOn = (a, f) => {
+    //if a and f are exact, delete all in column
+    if (
+      state.itemsOn.find((item, i) => {
+        return item.amp === a && item.freq === f;
+      })
+    ) {
+      setState({
+        ...state,
+        itemsOn: state.itemsOn.filter((item, i) => {
+          return item.freq != f;
+        }),
+      });
+      return;
+    }
+    //if f equals but a is less negative, remove the ones with lower Dbs and add new one
+
+    if (
+      state.itemsOn.find((item, i) => {
+        return item.amp <= a && item.freq === f;
+      })
+    ) {
+      setState({
+        ...state,
+        itemsOn: [
+          ...state.itemsOn.filter((item, i) => {
+            return item.freq != f || (item.freq === f && item.amp >= a);
+          }),
+          { freq: f, amp: a },
+        ],
+      });
+      return;
+    }
+
+    //if f is new, add it
+    setState({ ...state, itemsOn: [...state.itemsOn, { freq: f, amp: a }] });
+  };
+
   useEffect(() => {
-    console.log(state && state.amplitudes && state.amplitudes.length > 0);
+    console.log(state);
   }, [state]);
 
   return (
@@ -54,12 +98,12 @@ const FrequencyTable = ({ data }) => {
             {state.amplitudes.map((a, ai) => {
               return state.frequencies.map((f, fi) => {
                 if (fi !== 0) {
-                  return <div className="table-item"></div>;
+                  return <FreqTableItem key={fi + ai} amp={a} freq={f} toggle={toggleItemOn} itemsOn={state.itemsOn} />;
                 } else {
                   return (
                     <>
                       <div>{a} </div>
-                      <div className="table-item"></div>
+                      <FreqTableItem amp={a} freq={f} key={fi + ai} toggle={toggleItemOn} itemsOn={state.itemsOn} />
                     </>
                   );
                 }
